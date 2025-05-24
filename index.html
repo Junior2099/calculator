@@ -2,7 +2,8 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">   <link rel="icon" type="image/png" sizes="32x32" href="https://img.icons8.com/?size=100&id=S5D5w5vFLhYp&format=png&color=000000">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+    <link rel="icon" type="image/png" sizes="32x32" href="https://img.icons8.com/?size=100&id=zBjddwJhT2N3&format=png&color=000000">
     <title>Calculadora</title>
     <style>
         body {
@@ -104,7 +105,7 @@
             <button class="equals" onclick="calculate()">=</button>
             
             <button class="number" onclick="appendNumber('0')">0</button>
-            <button class="decimal" onclick="appendDecimal()">.</button>
+            <button class="decimal" onclick="appendDecimal()">,</button>
         </div>
     </div>
 
@@ -113,11 +114,20 @@
         let previousInput = '';
         let operation = null;
         let resetInput = false;
+        let fullExpression = '0';
         
         const display = document.getElementById('display');
         
         function updateDisplay() {
-            display.textContent = currentInput;
+            display.textContent = fullExpression || currentInput;
+        }
+        
+        function convertToNumber(input) {
+            return parseFloat(input.replace(',', '.'));
+        }
+        
+        function formatForDisplay(number) {
+            return number.toString().replace('.', ',');
         }
         
         function appendNumber(number) {
@@ -127,30 +137,51 @@
             } else {
                 currentInput += number;
             }
+            
+            if (operation) {
+                fullExpression = formatForDisplay(previousInput) + ' ' + operation.replace('*', '×') + ' ' + formatForDisplay(currentInput);
+            } else {
+                fullExpression = formatForDisplay(currentInput);
+            }
+            
             updateDisplay();
         }
         
         function appendDecimal() {
             if (resetInput) {
-                currentInput = '0.';
+                currentInput = '0,';
                 resetInput = false;
-            } else if (!currentInput.includes('.')) {
-                currentInput += '.';
+            } else if (!currentInput.includes(',')) {
+                currentInput += ',';
             }
+            
+            if (operation) {
+                fullExpression = formatForDisplay(previousInput) + ' ' + operation.replace('*', '×') + ' ' + formatForDisplay(currentInput);
+            } else {
+                fullExpression = formatForDisplay(currentInput);
+            }
+            
             updateDisplay();
         }
         
         function appendOperator(op) {
-            if (operation !== null) calculate();
-            previousInput = currentInput;
-            operation = op;
-            resetInput = true;
+            if (operation !== null && !resetInput) calculate();
+            
+            const displayOp = op === '*' ? '×' : op;
+            
+            if (currentInput !== '0' || previousInput !== '') {
+                previousInput = currentInput.replace(',', '.'); 
+                operation = op;
+                fullExpression = formatForDisplay(previousInput) + ' ' + displayOp;
+                resetInput = true;
+                updateDisplay();
+            }
         }
         
         function calculate() {
             let result;
-            const prev = parseFloat(previousInput);
-            const current = parseFloat(currentInput);
+            const prev = convertToNumber(previousInput);
+            const current = convertToNumber(currentInput);
             
             if (isNaN(prev) || isNaN(current)) return;
             
@@ -171,7 +202,8 @@
                     return;
             }
             
-            currentInput = result.toString();
+            currentInput = result.toString().replace('.', ',');
+            fullExpression = formatForDisplay(currentInput);
             operation = null;
             resetInput = true;
             updateDisplay();
@@ -181,23 +213,36 @@
             currentInput = '0';
             previousInput = '';
             operation = null;
+            fullExpression = '0';
             updateDisplay();
         }
         
         function backspace() {
+            if (resetInput) return;
+            
             if (currentInput.length === 1 || (currentInput.length === 2 && currentInput.startsWith('-'))) {
                 currentInput = '0';
             } else {
                 currentInput = currentInput.slice(0, -1);
             }
+            
+            if (operation) {
+                fullExpression = formatForDisplay(previousInput) + ' ' + operation.replace('*', '×') + ' ' + formatForDisplay(currentInput);
+            } else {
+                fullExpression = formatForDisplay(currentInput);
+            }
+            
             updateDisplay();
         }
 
-        // Adicionando suporte para teclado
+        window.addEventListener('DOMContentLoaded', () => {
+            document.body.focus();
+        });
+
         document.addEventListener('keydown', function(event) {
             if (event.key >= '0' && event.key <= '9') {
                 appendNumber(event.key);
-            } else if (event.key === '.') {
+            } else if (event.key === ',' || event.key === '.') {
                 appendDecimal();
             } else if (event.key === '+' || event.key === '-' || event.key === '*' || event.key === '/') {
                 appendOperator(event.key);
