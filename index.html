@@ -1,259 +1,290 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
-    <link rel="icon" type="image/png" sizes="32x32" href="https://img.icons8.com/?size=100&id=zBjddwJhT2N3&format=png&color=000000">
-    <title>Calculadora</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-        }
-        
-        .calculator {
-            background-color: #333;
-            border-radius: 10px;
-            padding: 20px;
-            width: 300px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        .display {
-            background-color: #eee;
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: right;
-            font-size: 24px;
-            height: 30px;
-            overflow: hidden;
-        }
-        
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-gap: 10px;
-        }
-        
-        button {
-            border: none;
-            border-radius: 5px;
-            padding: 15px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        
-        button:hover {
-            opacity: 0.8;
-        }
-        
-        .number {
-            background-color: #666;
-            color: white;
-        }
-        
-        .operator {
-            background-color: #ff9500;
-            color: white;
-        }
-        
-        .equals {
-            background-color: #ff9500;
-            color: white;
-            grid-column: span 2;
-        }
-        
-        .clear, .backspace {
-            background-color: #a5a5a5;
-        }
-        
-        .decimal {
-            background-color: #666;
-            color: white;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+
+    .calculator {
+      background-color: #333;
+      border-radius: 10px;
+      padding: 20px;
+      width: 320px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .display {
+      background-color: #eee;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 20px;
+      text-align: right;
+      font-size: 24px;
+      height: 30px;
+      overflow: hidden;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 10px;
+    }
+
+    button {
+      border: none;
+      border-radius: 5px;
+      padding: 15px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.8;
+    }
+
+    .number {
+      background-color: #666;
+      color: white;
+    }
+
+    .operator {
+      background-color: #ff9500;
+      color: white;
+    }
+
+    .equals {
+      background-color: #ff9500;
+      color: white;
+      grid-column: span 2;
+    }
+
+    .clear, .backspace, .memory {
+      background-color: #a5a5a5;
+    }
+
+    .decimal {
+      background-color: #666;
+      color: white;
+    }
+
+    @media (max-width: 400px) {
+      .calculator {
+        width: 90%;
+      }
+
+      .display {
+        font-size: 20px;
+      }
+
+      button {
+        padding: 12px;
+        font-size: 16px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="calculator">
-        <div class="display" id="display">0</div>
-        <div class="buttons">
-            <button class="clear" onclick="clearDisplay()">C</button>
-            <button class="backspace" onclick="backspace()">⌫</button>
-            <button class="operator" onclick="appendOperator('/')">/</button>
-            <button class="operator" onclick="appendOperator('*')">×</button>
-            
-            <button class="number" onclick="appendNumber('7')">7</button>
-            <button class="number" onclick="appendNumber('8')">8</button>
-            <button class="number" onclick="appendNumber('9')">9</button>
-            <button class="operator" onclick="appendOperator('-')">-</button>
-            
-            <button class="number" onclick="appendNumber('4')">4</button>
-            <button class="number" onclick="appendNumber('5')">5</button>
-            <button class="number" onclick="appendNumber('6')">6</button>
-            <button class="operator" onclick="appendOperator('+')">+</button>
-            
-            <button class="number" onclick="appendNumber('1')">1</button>
-            <button class="number" onclick="appendNumber('2')">2</button>
-            <button class="number" onclick="appendNumber('3')">3</button>
-            <button class="equals" onclick="calculate()">=</button>
-            
-            <button class="number" onclick="appendNumber('0')">0</button>
-            <button class="decimal" onclick="appendDecimal()">,</button>
-        </div>
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button class="memory" onclick="memoryClear()">MC</button>
+      <button class="memory" onclick="memoryRecall()">MR</button>
+      <button class="memory" onclick="memoryAdd()">M+</button>
+      <button class="memory" onclick="memorySubtract()">M-</button>
+
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button class="backspace" onclick="backspace()">⌫</button>
+      <button class="operator" onclick="appendOperator('/')">/</button>
+      <button class="operator" onclick="appendOperator('*')">×</button>
+
+      <button class="number" onclick="appendNumber('7')">7</button>
+      <button class="number" onclick="appendNumber('8')">8</button>
+      <button class="number" onclick="appendNumber('9')">9</button>
+      <button class="operator" onclick="appendOperator('-')">-</button>
+
+      <button class="number" onclick="appendNumber('4')">4</button>
+      <button class="number" onclick="appendNumber('5')">5</button>
+      <button class="number" onclick="appendNumber('6')">6</button>
+      <button class="operator" onclick="appendOperator('+')">+</button>
+
+      <button class="number" onclick="appendNumber('1')">1</button>
+      <button class="number" onclick="appendNumber('2')">2</button>
+      <button class="number" onclick="appendNumber('3')">3</button>
+      <button class="operator" onclick="appendOperator('%')">%</button>
+
+      <button class="number" onclick="appendNumber('0')">0</button>
+      <button class="decimal" onclick="appendDecimal()">,</button>
+      <button class="equals" onclick="calculate()">=</button>
     </div>
+  </div>
 
-    <script>
-        let currentInput = '0';
-        let previousInput = '';
-        let operation = null;
-        let resetInput = false;
-        let fullExpression = '0';
-        
-        const display = document.getElementById('display');
-        
-        function updateDisplay() {
-            display.textContent = fullExpression || currentInput;
-        }
-        
-        function convertToNumber(input) {
-            return parseFloat(input.replace(',', '.'));
-        }
-        
-        function formatForDisplay(number) {
-            return number.toString().replace('.', ',');
-        }
-        
-        function appendNumber(number) {
-            if (currentInput === '0' || resetInput) {
-                currentInput = number;
-                resetInput = false;
-            } else {
-                currentInput += number;
-            }
-            
-            if (operation) {
-                fullExpression = formatForDisplay(previousInput) + ' ' + operation.replace('*', '×') + ' ' + formatForDisplay(currentInput);
-            } else {
-                fullExpression = formatForDisplay(currentInput);
-            }
-            
-            updateDisplay();
-        }
-        
-        function appendDecimal() {
-            if (resetInput) {
-                currentInput = '0,';
-                resetInput = false;
-            } else if (!currentInput.includes(',')) {
-                currentInput += ',';
-            }
-            
-            if (operation) {
-                fullExpression = formatForDisplay(previousInput) + ' ' + operation.replace('*', '×') + ' ' + formatForDisplay(currentInput);
-            } else {
-                fullExpression = formatForDisplay(currentInput);
-            }
-            
-            updateDisplay();
-        }
-        
-        function appendOperator(op) {
-            if (operation !== null && !resetInput) calculate();
-            
-            const displayOp = op === '*' ? '×' : op;
-            
-            if (currentInput !== '0' || previousInput !== '') {
-                previousInput = currentInput.replace(',', '.'); 
-                operation = op;
-                fullExpression = formatForDisplay(previousInput) + ' ' + displayOp;
-                resetInput = true;
-                updateDisplay();
-            }
-        }
-        
-        function calculate() {
-            let result;
-            const prev = convertToNumber(previousInput);
-            const current = convertToNumber(currentInput);
-            
-            if (isNaN(prev) || isNaN(current)) return;
-            
-            switch (operation) {
-                case '+':
-                    result = prev + current;
-                    break;
-                case '-':
-                    result = prev - current;
-                    break;
-                case '*':
-                    result = prev * current;
-                    break;
-                case '/':
-                    result = prev / current;
-                    break;
-                default:
-                    return;
-            }
-            
-            currentInput = result.toString().replace('.', ',');
-            fullExpression = formatForDisplay(currentInput);
-            operation = null;
-            resetInput = true;
-            updateDisplay();
-        }
-        
-        function clearDisplay() {
-            currentInput = '0';
-            previousInput = '';
-            operation = null;
-            fullExpression = '0';
-            updateDisplay();
-        }
-        
-        function backspace() {
-            if (resetInput) return;
-            
-            if (currentInput.length === 1 || (currentInput.length === 2 && currentInput.startsWith('-'))) {
-                currentInput = '0';
-            } else {
-                currentInput = currentInput.slice(0, -1);
-            }
-            
-            if (operation) {
-                fullExpression = formatForDisplay(previousInput) + ' ' + operation.replace('*', '×') + ' ' + formatForDisplay(currentInput);
-            } else {
-                fullExpression = formatForDisplay(currentInput);
-            }
-            
-            updateDisplay();
-        }
+  <script>
+    let currentInput = '0';
+    let previousInput = '';
+    let operation = null;
+    let resetInput = false;
+    let fullExpression = '0';
+    let memory = 0;
 
-        window.addEventListener('DOMContentLoaded', () => {
-            document.body.focus();
-        });
+    const display = document.getElementById('display');
 
-        document.addEventListener('keydown', function(event) {
-            if (event.key >= '0' && event.key <= '9') {
-                appendNumber(event.key);
-            } else if (event.key === ',' || event.key === '.') {
-                appendDecimal();
-            } else if (event.key === '+' || event.key === '-' || event.key === '*' || event.key === '/') {
-                appendOperator(event.key);
-            } else if (event.key === 'Enter' || event.key === '=') {
-                calculate();
-            } else if (event.key === 'Escape') {
-                clearDisplay();
-            } else if (event.key === 'Backspace') {
-                backspace();
-            }
-        });
-    </script>
+    function updateDisplay() {
+      display.textContent = fullExpression;
+    }
+
+    function convertToNumber(input) {
+      return parseFloat(input.replace(',', '.'));
+    }
+
+    function formatForDisplay(number) {
+      if (number === '' || number === undefined) return '0';
+      return number.toString().replace('.', ',');
+    }
+
+    function appendNumber(num) {
+      if (resetInput) {
+        currentInput = num;
+        resetInput = false;
+      } else {
+        currentInput = currentInput === '0' ? num : currentInput + num;
+      }
+
+      fullExpression = operation
+        ? formatForDisplay(previousInput) + ' ' + operation.replace('*', '×') + ' ' + formatForDisplay(currentInput)
+        : formatForDisplay(currentInput);
+
+      updateDisplay();
+    }
+
+    function appendDecimal() {
+      if (resetInput) {
+        currentInput = '0,';
+        resetInput = false;
+      } else if (!currentInput.includes(',')) {
+        currentInput += ',';
+      }
+
+      fullExpression = operation
+        ? formatForDisplay(previousInput) + ' ' + operation.replace('*', '×') + ' ' + formatForDisplay(currentInput)
+        : formatForDisplay(currentInput);
+
+      updateDisplay();
+    }
+
+    function appendOperator(op) {
+      if (!resetInput && operation !== null) {
+        calculate();
+      }
+
+      previousInput = currentInput;
+      operation = op;
+      resetInput = true;
+
+      fullExpression = formatForDisplay(previousInput) + ' ' + (op === '*' ? '×' : op);
+      updateDisplay();
+    }
+
+    function calculate() {
+      if (!operation || resetInput) return;
+
+      const prev = convertToNumber(previousInput);
+      const curr = convertToNumber(currentInput);
+      let result;
+
+      if (isNaN(prev) || isNaN(curr)) return;
+
+      switch (operation) {
+        case '+':
+          result = prev + curr;
+          break;
+        case '-':
+          result = prev - curr;
+          break;
+        case '*':
+          result = prev * curr;
+          break;
+        case '/':
+          result = curr === 0 ? 'Erro' : prev / curr;
+          break;
+        case '%':
+          result = prev * (curr / 100);
+          break;
+        default:
+          return;
+      }
+
+      currentInput = result.toString().replace('.', ',');
+      previousInput = '';
+      operation = null;
+      fullExpression = formatForDisplay(currentInput);
+      resetInput = true;
+      updateDisplay();
+    }
+
+    function clearDisplay() {
+      location.reload();
+    }
+
+    function backspace() {
+      if (resetInput) return;
+      currentInput = currentInput.length <= 1 ? '0' : currentInput.slice(0, -1);
+
+      fullExpression = operation
+        ? formatForDisplay(previousInput) + ' ' + operation.replace('*', '×') + ' ' + formatForDisplay(currentInput)
+        : formatForDisplay(currentInput);
+
+      updateDisplay();
+    }
+
+    function memoryClear() {
+      memory = 0;
+    }
+
+    function memoryRecall() {
+      currentInput = memory.toString().replace('.', ',');
+      fullExpression = formatForDisplay(currentInput);
+      resetInput = true;
+      updateDisplay();
+    }
+
+    function memoryAdd() {
+      memory += convertToNumber(currentInput);
+      resetInput = true;
+    }
+
+    function memorySubtract() {
+      memory -= convertToNumber(currentInput);
+      resetInput = true;
+    }
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key >= '0' && event.key <= '9') {
+        appendNumber(event.key);
+      } else if (event.key === ',' || event.key === '.') {
+        appendDecimal();
+      } else if (['+', '-', '*', '/', '%'].includes(event.key)) {
+        appendOperator(event.key);
+      } else if (event.key === 'Enter' || event.key === '=') {
+        calculate();
+      } else if (event.key === 'Escape') {
+        clearDisplay();
+      } else if (event.key === 'Backspace') {
+        backspace();
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', updateDisplay);
+  </script>
 </body>
 </html>
